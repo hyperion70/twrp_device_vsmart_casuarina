@@ -2,11 +2,8 @@
 $(call inherit-product, vendor/omni/config/common.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-	LOCAL_KERNEL := device/vsmart/casuarina/Image.gz-dtb
-else
-	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
+# API
+PRODUCT_SHIPPING_API_LEVEL := 29
 
 # qcom standard decryption
 PRODUCT_PACKAGES += \
@@ -25,10 +22,8 @@ PRODUCT_MODEL := Joy 3+
 PRODUCT_MANUFACTURER := vsmart
 
 PRODUCT_PROPERTY_OVERRIDES += \
-	ro.secure=1 \
 	ro.adb.secure=0 \
-	ro.product.device=casuarina \
-	ro.build.date.utc=1000000000
+	ro.product.device=casuarina
 
 BUILD_FINGERPRINT := vsmart/casuarina_rus/casuarina:10/QKQ1.200311.002/V430E_RUS_U_B2_201013:user/release-keys
 PRODUCT_BUILD_PROP_OVERRIDES += \

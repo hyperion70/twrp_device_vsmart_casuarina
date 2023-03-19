@@ -15,6 +15,7 @@
 #
 
 ALLOW_MISSING_DEPENDENCIES := true
+TARGET_SUPPORTS_64_BIT_APPS := false
 
 # Architecture
 TARGET_ARCH := arm64
@@ -22,21 +23,20 @@ TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := cortex-a53
+TARGET_CPU_VARIANT_RUNTIME := kryo
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := cortex-a53
+TARGET_2ND_CPU_VARIANT_RUNTIME := $(TARGET_CPU_VARIANT_RUNTIME)
 
 TARGET_BOARD_PLATFORM := msm8953
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno506
 
-TARGET_BOARD_SUFFIX := _64
-TARGET_USES_64_BIT_BINDER := true
-
 # Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := MSM8953
+TARGET_BOOTLOADER_BOARD_NAME := $(TARGET_BOARD_PLATFORM)
 TARGET_NO_BOOTLOADER := true
 
 # Kernel
@@ -59,11 +59,21 @@ TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_SUPPRESS_SECURE_ERASE := true
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
+TARGET_COPY_OUT_VENDOR := vendor
+TARGET_RECOVERY_DEVICE_MODULES += \
+    libion \
+    libxml2
+
+RECOVERY_LIBRARY_SOURCE_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libxml2.so
+
 TARGET_RECOVERY_FSTAB := device/vsmart/casuarina/twrp.fstab
 BOARD_USES_METADATA_PARTITION := false
 
 # TWRP-Specific
-TW_DEVICE_VERSION := for JOY 3+
+TW_DEVICE_VERSION := by hyperion70
 TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 TARGET_RECOVERY_PIXEL_FORMAT := RGBA_8888
 TW_Y_OFFSET := 50
@@ -73,17 +83,21 @@ TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_DEFAULT_BRIGHTNESS := 255
 TW_DEFAULT_LANGUAGE := ru
-TW_USE_TOOLBOX := true
-# TW_FORCE_USE_BUSYBOX := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.0/lun.%d/file
-TWRP_INCLUDE_LOGCAT := true
-TARGET_USES_LOGD := true
-
-# Encryption
-PLATFORM_VERSION := 16.1.0
-PLATFORM_SECURITY_PATCH := 2099-12-31
-VENDOR_SECURITY_PATCH := 2099-12-31
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
+TWRP_INCLUDE_LOGCAT := true
+TARGET_USES_LOGD := true
+TW_OVERRIDE_SYSTEM_PROPS := \
+    "ro.build.date.utc;ro.bootimage.build.date.utc=ro.build.date.utc;ro.odm.build.date.utc=ro.build.date.utc;ro.product.build.date.utc=ro.build.date.utc;ro.system.build.date.utc=ro.build.date.utc;ro.system_ext.build.date.utc=ro.build.date.utc;ro.vendor.build.date.utc=ro.build.date.utc;ro.build.product;ro.build.fingerprint=ro.system.build.fingerprint;ro.build.version.incremental;ro.product.device=ro.product.system.device;ro.product.model=ro.product.system.model;ro.product.name=ro.product.system.name"
+TW_LOAD_VENDOR_MODULES := "mpq-adapter.ko mpq-dmx-hw-plugin.ko pronto_wlan.ko"
+TW_USE_FSCRYPT_POLICY := 1
+CONFIG_DM_CRYPT=y
+
+# Encryption
+PLATFORM_VERSION := 99.87.36
+PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
+PLATFORM_SECURITY_PATCH := 2099-12-31
+VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 BOARD_USES_QCOM_FBE_DECRYPTION := true
 
